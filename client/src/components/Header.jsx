@@ -1,4 +1,4 @@
-import { Navbar, NavbarCollapse, TextInput } from 'flowbite-react'
+import { Navbar, NavbarCollapse, TextInput, Button } from 'flowbite-react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { AiOutlineSearch } from "react-icons/ai"
@@ -28,15 +28,13 @@ function Header() {
                 <AiOutlineSearch />
             </button>
             <div className='flex gap-2 md:order-2'>
-                <button className='w-12 h-10  border border-gray-300 rounded-full 
-                flex items-center justify-center' >
+                <Button className=' hidden sm:inline' color='gray' pill>
                     <FaMoon />
-                </button>
+                </Button>
                 <Link to='/sign-in'>
-                    <button className='w-18 h-10  border border-blue-500 rounded-md  
-                    flex items-center justify-center text-white text-sm bg-gradient-to-br from-[#4481EB] to-[#04BEFE] px-5 py-3 font-medium transition duration-200 hover:shadow-md hover:shadow-[#4481EB]/50 '>
+                    <Button gradientDuoTone="purpleToPink" outline>
                         Sign In
-                    </button>
+                    </Button>
                 </Link>
                 <Navbar.Toggle/>
             </div>
