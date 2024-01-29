@@ -1,5 +1,6 @@
 import express from 'express'
 import database from './db/db.js'
+import userRoutes from './routes/user.route.js'
 import dotenv from'dotenv'
 dotenv.config()
 
@@ -11,6 +12,9 @@ database()
 
 // Middlewares
 app.use(express.json())
+
+// Rotes
+app.use('/user', userRoutes)
 
 
 app.listen(port, () => {
