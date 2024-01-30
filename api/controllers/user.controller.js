@@ -1,8 +1,7 @@
-// import User from "../models/user.model";
 
 const userController = {
     create: (req, res) => {
-        res.send('Rota chamada com sucesso')
+        res.send('Rota user chamada com sucesso')
     },
 }
 

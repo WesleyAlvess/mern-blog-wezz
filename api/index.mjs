@@ -1,6 +1,7 @@
 import express from 'express'
 import database from './db/db.js'
 import userRoutes from './routes/user.route.js'
+import authRoutes from './routes/auth.route.js'
 import dotenv from'dotenv'
 dotenv.config()
 
@@ -14,7 +15,8 @@ database()
 app.use(express.json())
 
 // Rotes
-app.use('/user', userRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
 
 
 app.listen(port, () => {
