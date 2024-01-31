@@ -11,8 +11,8 @@ function Header() {
         <Navbar className='border-b-2' >
             <Link to='/' className='self-center whitespace-nowrap 
             text-sm sm:text-xl font-semibold dark:text-white'>
-                <span className='px-2 py-2 bg-gradient-to-r from-indigo-500
-                via-purple-500 to-pink-600 rounded-lg text-white'>Wezz's</span>
+                <span className='px-4 py-.9 bg-gradient-to-r from-indigo-500
+                via-purple-500 to-pink-600 rounded-xl text-white'>Wezz's</span>
                 Blog
             </Link>
             <form>
