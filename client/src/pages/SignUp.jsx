@@ -1,7 +1,31 @@
 import { Link } from "react-router-dom"
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Alert, Button, Label, TextInput } from 'flowbite-react'
+import { useState } from "react";
+import axios from 'axios'
 
 function SignUp() {
+    const [formData, setFormData] = useState({})
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.username || !formData.email || !formData.password) {
+            return setErrorMessage('Por favor preencha todos os campos.');
+        }
+        try {
+            const response = await axios.post('/api/auth/signup', formData);
+            const data = response.data;
+            
+        } catch (err) {
+            console.error('Erro durante a requisição:', err);
+        }
+    };
+    
     return (
         <div className="min-h-screen mt-20">
             <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -19,21 +43,23 @@ function SignUp() {
                 </div>
                 {/* right */}
                 <div className="flex-1">
-                    <form className="flex flex-col gap-4">
+                    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                         <div>
                             <Label value='Nome de usuário' />
                             <TextInput
                                 type="text"
                                 placeholder="Username"
                                 id="username"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
                             <Label value='Email' />
                             <TextInput
-                                type="text"
+                                type="email"
                                 placeholder="Email"
                                 id="email"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
@@ -42,14 +68,22 @@ function SignUp() {
                                 type="password"
                                 placeholder="Password"
                                 id="password"
+                                onChange={handleChange}
                             />
                         </div>
                         <Button gradientDuoTone='purpleToPink' type="submit">Cadastre-se</Button>
                     </form>
                     <div className="flex gap-2 text-sm mt-5">
                         <span>Já tem uma conta?</span>
-                        <Link to='/sign-in' className="text-blue-500">Sign In</Link>
+                        <Link to='/sign-in' className="text-blue-500">Entrar</Link>
                     </div>
+                    {
+                        errorMessage && (
+                            <Alert className="mt-5" color='failure'>
+                                {errorMessage}
+                            </Alert>
+                        )
+                    }
                 </div>
             </div>
         </div>

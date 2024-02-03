@@ -1,27 +1,51 @@
 import User from '../models/user.model.js'
-import bcript from 'bcrypt'
-import errorHandler from '../utils/error.js'
+import bcrypt from 'bcrypt'
+
+import { validateEmail, validateSignupData, validateUserName } from '../middlewares/validation.js'
+
 
 const signup = async (req, res, next) => {
     try {
-        const { username, email, password} = req.body
-        if (!username || !email || !password || username === '' || email === "" || password === '') {
-            next(errorHandler(400, 'All fields are required'))
-        } 
+        const {username, email, password} = req.body
 
-        const hashedPassword = bcript.hashSync(password, 10)
+        // Validação de email senha e espaços nos inputs
+        const signupValidationResult = validateSignupData(req, res)
+        if (signupValidationResult) {
+            return res.status(signupValidationResult.statusCode).json(signupValidationResult)
+        }
 
-        const newUser = await new User({
+        // Validação de username existente
+        const userNameValidateResult = await validateUserName(req, res)
+        if(userNameValidateResult) {
+            return res.status(userNameValidateResult.statusCode).json(userNameValidateResult)
+        }
+
+        // Validação de email existente
+        const validateEmailResult = await validateEmail(req, res)
+        if (validateEmailResult) {
+            return res.status(validateEmailResult.statusCode).json(validateEmailResult)
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        const newUser = new User({
             username,
             email,
             password: hashedPassword,
         })
 
-        await newUser.save()
-        res.json({message: "User created successfully"})
-        console.log(next.err);
+        await newUser.save() 
+        return res.json({
+            success: true,
+            statusCode: 200,
+            message: "Usuário criado com sucesso"
+        })
     } catch (err) {
-        next(err)
+        return res.status(500).json({
+            success:false,
+            statusCode: 500,
+            message: "Erro interno do servidor"
+        })
     }
 }
 
