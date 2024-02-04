@@ -6,6 +6,7 @@ import axios from 'axios'
 function SignUp() {
     const [formData, setFormData] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
+    const [successMessage, setSuccessMessage] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const handleChange = (e) => {
@@ -14,18 +15,26 @@ function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.username || !formData.email || !formData.password) {
-            return setErrorMessage('Por favor preencha todos os campos.');
-        }
+        setErrorMessage(null)
         try {
+            if (!formData.username || !formData.email || !formData.password) {
+                return setErrorMessage('Por favor preencha todos os campos.');
+            }
+
             const response = await axios.post('/api/auth/signup', formData);
             const data = response.data;
-            
+
+            setSuccessMessage('Cadastro realizado com sucesso')
         } catch (err) {
-            console.error('Erro durante a requisição:', err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setErrorMessage(err.response.data.message)
+            } else {
+                setErrorMessage("Erro durante a requisição.")
+            }
+            console.error("Erro durante a requisição:", err);
         }
     };
-    
+
     return (
         <div className="min-h-screen mt-20">
             <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -81,6 +90,13 @@ function SignUp() {
                         errorMessage && (
                             <Alert className="mt-5" color='failure'>
                                 {errorMessage}
+                            </Alert>
+                        )
+                    }
+                    {
+                        successMessage && (
+                            <Alert className="mt-5" color='success'>
+                                {successMessage}
                             </Alert>
                         )
                     }

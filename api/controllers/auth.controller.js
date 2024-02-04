@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import { validateEmail, validateSignupData, validateUserName } from '../middlewares/validation.js'
 
@@ -34,12 +35,19 @@ const signup = async (req, res, next) => {
             password: hashedPassword,
         })
 
+        // Salvando usuário
         await newUser.save() 
+    
+        //Token JWT
+        const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET,{ expiresIn: '1h'} )
+
         return res.json({
             success: true,
             statusCode: 200,
-            message: "Usuário criado com sucesso"
+            message: "Usuário criado com sucesso",
+            token: token
         })
+
     } catch (err) {
         return res.status(500).json({
             success:false,
