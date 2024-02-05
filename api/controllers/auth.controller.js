@@ -86,7 +86,7 @@ export const signin = async (req, res) => {
 
         //Token JWT
         const token = jwt.sign({ userId: validUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
-        
+
         return res.status(200).cookie('access_token', token, {
             httpOnly: true
         }).json({
@@ -94,7 +94,7 @@ export const signin = async (req, res) => {
             statusCode: 200,
             message: "Login bem sucedido"
         });
-        
+
     } catch (err) {
 
     }
