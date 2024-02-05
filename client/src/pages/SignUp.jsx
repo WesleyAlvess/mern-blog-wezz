@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import { Alert, Button, Label, TextInput } from 'flowbite-react'
+import { Link, useNavigate } from "react-router-dom"
+import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import { useState } from "react";
 import axios from 'axios'
 
@@ -8,6 +8,7 @@ function SignUp() {
     const [errorMessage, setErrorMessage] = useState(null)
     const [successMessage, setSuccessMessage] = useState(null)
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -17,14 +18,18 @@ function SignUp() {
         e.preventDefault();
         setErrorMessage(null)
         try {
+            setLoading(true)
+            setErrorMessage(null)
             if (!formData.username || !formData.email || !formData.password) {
                 return setErrorMessage('Por favor preencha todos os campos.');
             }
-
             const response = await axios.post('/api/auth/signup', formData);
             const data = response.data;
 
             setSuccessMessage('Cadastro realizado com sucesso')
+            if (data.success === true) {
+                navigate('/sign-in')
+            }
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
                 setErrorMessage(err.response.data.message)
@@ -32,6 +37,8 @@ function SignUp() {
                 setErrorMessage("Erro durante a requisição.")
             }
             console.error("Erro durante a requisição:", err);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -80,7 +87,16 @@ function SignUp() {
                                 onChange={handleChange}
                             />
                         </div>
-                        <Button gradientDuoTone='purpleToPink' type="submit">Cadastre-se</Button>
+                        <Button gradientDuoTone='purpleToPink' type="submit" disabled={loading} >
+                            {
+                                loading ? (
+                                    <>
+                                        <Spinner size="sm" />
+                                        <span className="pl-3">Loading...</span>
+                                    </>
+                                ) : "Sign Up"
+                            }
+                        </Button>
                     </form>
                     <div className="flex gap-2 text-sm mt-5">
                         <span>Já tem uma conta?</span>
