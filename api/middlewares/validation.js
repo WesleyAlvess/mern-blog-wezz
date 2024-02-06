@@ -8,7 +8,7 @@ export const validateSignupData = (req, res) => {
         return {
             success: false,
             statusCode: 400,
-            message: "Por favor preencha todos os campos."
+            message: "Por favor, preencha todos os campos."
         }
     }
 

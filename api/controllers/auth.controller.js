@@ -87,16 +87,24 @@ export const signin = async (req, res) => {
         //Token JWT
         const token = jwt.sign({ userId: validUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-        return res.status(200).cookie('access_token', token, {
+        const { password: pass, ...rest } = validUser._doc
+
+        res.status(200).cookie('access_token', token, {
             httpOnly: true
         }).json({
             success: true,
             statusCode: 200,
-            message: "Login bem sucedido"
+            message: "Login bem sucedido",
+            rest,
         });
-
+        
     } catch (err) {
-
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Erro interno do servidor",
+            err
+        })
     }
 
 }
